@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -13,11 +15,16 @@ public class LineInput : MonoBehaviour
     public float Threshold;
     public int iterations = 1; // Number of smoothing iterations
     public float smoothingFactor = 0.5f;
+    public string ShapeName;
+    public List<Vector3[]> ShapeSamples;
+    public List<GameObject> DrawnShapes;
     
     public bool Pressed;
     void Start()
     {
         Line = GetComponent<SplineContainer>().Splines[0];
+        ShapeSamples = new List<Vector3[]>();
+        DrawnShapes = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -43,8 +50,12 @@ public class LineInput : MonoBehaviour
                     ShownLine.startWidth = 0.1f;
                     ShownLine.endWidth = 0.1f;
 
-                    var Points = ScaleToSetSize(ConvertSplineToArray(Line, 60),0.45f);
-                    ShownLine.SetPositions(TranslateToOrigin(RotateToUp(Points)));
+                    var Points = TranslateToOrigin(RotateToUp(ScaleToSetSize(ConvertSplineToArray(Line, 60),0.45f)));
+                    ShapeSamples.Add(Points);
+                    DrawnShapes.Add(ShownLine.gameObject);
+                    
+                    
+                    ShownLine.SetPositions(Points);
                     ShownLine.material = new Material(Shader.Find("Unlit/Color"));
                     ShownLine.material.color = Color.black;
                 }
@@ -58,6 +69,21 @@ public class LineInput : MonoBehaviour
         if (Pressed && Vector3.Distance(pos, Line.Last().Position) > Threshold)
         {
             Line.Add(new BezierKnot(pos), TangentMode.AutoSmooth);
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log($"saving with samples: {ShapeSamples.Count}");
+            var Avgs = JsonConvert.SerializeObject(AveragePoints(ShapeSamples));
+            File.WriteAllText(Application.dataPath+$"/Shapes/{ShapeName}.txt",Avgs);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Destroy(DrawnShapes[DrawnShapes.Count-1]);
+            DrawnShapes.RemoveAt(DrawnShapes.Count-1);
+            ShapeSamples.RemoveAt(ShapeSamples.Count-1);
         }
     }
 
@@ -152,6 +178,35 @@ public class LineInput : MonoBehaviour
         }
 
         return translatedPoints;
+    }
+    
+    public static Vector3[] AveragePoints(List<Vector3[]> listOfPoints)
+    {
+        if (listOfPoints == null || listOfPoints.Count == 0)
+        {
+            Debug.LogError("No lists provided to average.");
+            return null;
+        }
+
+        int pointCount = listOfPoints[0].Length;
+        Vector3[] averagePoints = new Vector3[pointCount];
+
+        for (int i = 0; i < pointCount; i++)
+        {
+            Vector3 sum = Vector3.zero;
+            foreach (Vector3[] points in listOfPoints)
+            {
+                if (points.Length != pointCount)
+                {
+                    Debug.LogError("All Vector3 arrays must have the same length.");
+                    return null;
+                }
+                sum += points[i];
+            }
+            averagePoints[i] = sum / listOfPoints.Count;
+        }
+
+        return averagePoints;
     }
 
     
