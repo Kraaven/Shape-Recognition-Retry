@@ -353,6 +353,7 @@ GameObject:
   - component: {fileID: 2131259836}
   - component: {fileID: 2131259835}
   - component: {fileID: 2131259837}
+  - component: {fileID: 2131259838}
   m_Layer: 0
   m_Name: Drawer
   m_TagString: Untagged
@@ -372,7 +373,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e9b85ebc0130741bbc26190fc93ff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Threshold: 0.5
+  Threshold: 0.35
+  iterations: 3
+  smoothingFactor: 0.25
   Pressed: 0
 --- !u!4 &2131259836
 Transform:
@@ -429,6 +432,18 @@ MonoBehaviour:
       m_Data: []
   m_Knots:
     m_KnotsLink: []
+--- !u!114 &2131259838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2131259834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae8bb8e212591714c8489f78bbac921f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
