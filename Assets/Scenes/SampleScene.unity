@@ -368,7 +368,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2131259834}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4e9b85ebc0130741bbc26190fc93ff2, type: 3}
   m_Name: 
@@ -376,7 +376,7 @@ MonoBehaviour:
   Threshold: 0.35
   iterations: 3
   smoothingFactor: 0.25
-  ShapeName: Square
+  ShapeName: 
   DrawnShapes: []
   Pressed: 0
 --- !u!4 &2131259836
@@ -447,7 +447,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShapeData: []
-  Shapename: Square
+  Shapename: Circle
+  DEBUG: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -85,6 +85,12 @@ public class LineInput : MonoBehaviour
             DrawnShapes.RemoveAt(DrawnShapes.Count-1);
             ShapeSamples.RemoveAt(ShapeSamples.Count-1);
         }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GetComponent<LineContainer>().CheckData(ShapeSamples.Last());
+        }
+        
     }
 
     Vector3 GetInputPosition()
